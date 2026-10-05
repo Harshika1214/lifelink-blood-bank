@@ -258,6 +258,8 @@ def donate_blood(request):
                 )
 
                 donation.donor = donor_profile
+                # Always use the donor's actual blood group
+                donation.blood_group = donor_profile.blood_group
 
                 donation.save()
 

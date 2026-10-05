@@ -6,12 +6,14 @@ from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load environment variables from .env
 load_dotenv(BASE_DIR / ".env")
 
 
+# Security
 SECRET_KEY = os.getenv(
     "SECRET_KEY",
-    "django-insecure-development-only-key"
+    "django-insecure-development-key"
 )
 
 DEBUG = os.getenv("DEBUG", "True").lower() == "true"
@@ -80,28 +82,20 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": (
-            "django.contrib.auth.password_validation."
-            "UserAttributeSimilarityValidator"
-        ),
+        "NAME":
+        "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        "NAME": (
-            "django.contrib.auth.password_validation."
-            "MinimumLengthValidator"
-        ),
+        "NAME":
+        "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        "NAME": (
-            "django.contrib.auth.password_validation."
-            "CommonPasswordValidator"
-        ),
+        "NAME":
+        "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        "NAME": (
-            "django.contrib.auth.password_validation."
-            "NumericPasswordValidator"
-        ),
+        "NAME":
+        "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -132,8 +126,24 @@ LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "home"
 
 
+# Email configuration
 EMAIL_BACKEND = (
-    "django.core.mail.backends.console.EmailBackend"
+    "django.core.mail.backends.smtp.EmailBackend"
+    if os.getenv("EMAIL_HOST")
+    else "django.core.mail.backends.console.EmailBackend"
 )
 
-DEFAULT_FROM_EMAIL = "noreply@lifelink.local"
+EMAIL_HOST = os.getenv("EMAIL_HOST", "")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
+EMAIL_USE_TLS = os.getenv(
+    "EMAIL_USE_TLS",
+    "True"
+).lower() == "true"
+
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+
+DEFAULT_FROM_EMAIL = os.getenv(
+    "DEFAULT_FROM_EMAIL",
+    "noreply@lifelink.local"
+)
