@@ -11,9 +11,15 @@ env/
 # Django
 db.sqlite3
 *.log
+staticfiles/
 
-# Environment variables / secrets
+# Environment variables and secrets
 .env
+.env.*
+!.env.example
+
+# User uploaded files
+media/
 
 # VS Code
 .vscode/
@@ -21,9 +27,3 @@ db.sqlite3
 # OS files
 .DS_Store
 Thumbs.db
-
-# Django generated files
-staticfiles/
-
-# User uploaded files
-media/
