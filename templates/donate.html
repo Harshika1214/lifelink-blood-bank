@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block title %}
+Donate Blood | LifeLink
+{% endblock %}
+
+{% block content %}
+<section class="form-page">
+    <div class="page-container">
+
+        <div class="page-header">
+            <div>
+                <span class="eyebrow">SAVE A LIFE</span>
+                <h1>Record a blood donation</h1>
+                <p>
+                    Every donation can help someone in need.
+                    Add your donation details below.
+                </p>
+            </div>
+
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                ← Back to Dashboard
+            </a>
+        </div>
+
+        <div class="donation-layout">
+
+            <div class="form-card donation-form-card">
+
+                <div class="form-card-header">
+                    <div class="form-icon">+</div>
+                    <div>
+                        <span class="eyebrow">DONATION DETAILS</span>
+                        <h2>Donation information</h2>
+                    </div>
+                </div>
+
+                <p class="form-description">
+                    Enter the blood group, number of units and
+                    date of your donation.
+                </p>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="form-error">
+                            {{ form.non_field_errors|striptags }}
+                        </div>
+                    {% endif %}
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="{{ form.blood_group.id_for_label }}">
+                                Blood Group
+                            </label>
+
+                            {{ form.blood_group }}
+
+                            {% if form.blood_group.errors %}
+                                <div class="field-error">
+                                    {{ form.blood_group.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.units.id_for_label }}">
+                                Number of Units
+                            </label>
+
+                            {{ form.units }}
+
+                            <small class="field-help">
+                                Enter between 1 and 5 units.
+                            </small>
+
+                            {% if form.units.errors %}
+                                <div class="field-error">
+                                    {{ form.units.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.donation_date.id_for_label }}">
+                                Donation Date
+                            </label>
+
+                            {{ form.donation_date }}
+
+                            {% if form.donation_date.errors %}
+                                <div class="field-error">
+                                    {{ form.donation_date.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group full-field">
+                            <label for="{{ form.notes.id_for_label }}">
+                                Notes
+                            </label>
+
+                            {{ form.notes }}
+
+                            <small class="field-help">
+                                Optional. Add any useful information
+                                about this donation.
+                            </small>
+
+                            {% if form.notes.errors %}
+                                <div class="field-error">
+                                    {{ form.notes.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                    <div class="donation-confirmation">
+                        <div class="confirmation-icon">✓</div>
+                        <div>
+                            <strong>Before submitting</strong>
+                            <p>
+                                Make sure the blood group, units and
+                                donation date are correct. Completed
+                                donations are added to the blood inventory.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Record Donation
+                        </button>
+
+                        <a
+                            href="{% url 'dashboard' %}"
+                            class="btn btn-secondary"
+                        >
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <aside class="donation-info-card">
+
+                <div class="donation-info-top">
+                    <div class="large-blood-icon">
+                        +
+                    </div>
+
+                    <span class="eyebrow">
+                        YOUR DONOR PROFILE
+                    </span>
+
+                    <h2>{{ profile.full_name }}</h2>
+
+                    <div class="blood-type-large">
+                        {{ profile.blood_group }}
+                    </div>
+                </div>
+
+                <div class="donor-info-list">
+
+                    <div class="donor-info-row">
+                        <span>Age</span>
+                        <strong>{{ profile.age }}</strong>
+                    </div>
+
+                    <div class="donor-info-row">
+                        <span>City</span>
+                        <strong>
+                            {{ profile.city|default:"Not added" }}
+                        </strong>
+                    </div>
+
+                    <div class="donor-info-row">
+                        <span>Last Donation</span>
+                        <strong>
+                            {% if profile.last_donation_date %}
+                                {{ profile.last_donation_date }}
+                            {% else %}
+                                No donation yet
+                            {% endif %}
+                        </strong>
+                    </div>
+
+                    <div class="donor-info-row">
+                        <span>Status</span>
+
+                        {% if profile.eligible_to_donate %}
+                            <strong class="eligible-text">
+                                Eligible
+                            </strong>
+                        {% else %}
+                            <strong class="waiting-text">
+                                Waiting
+                            </strong>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <div class="donation-tip">
+                    <span class="tip-icon">♥</span>
+
+                    <div>
+                        <strong>Thank you for donating!</strong>
+
+                        <p>
+                            Your contribution helps maintain
+                            blood availability for patients
+                            who need it.
+                        </p>
+                    </div>
+                </div>
+
+            </aside>
+
+        </div>
+    </div>
+</section>
+{% endblock %}

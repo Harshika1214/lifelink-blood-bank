@@ -1,0 +1,529 @@
+{% extends "base.html" %}
+{% load blood_extras %}
+
+{% block title %}
+LifeLink | Blood Bank Management System
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =====================================================
+     HERO SECTION
+===================================================== -->
+
+<section class="hero-section">
+
+    <div class="hero-container">
+
+
+        <!-- LEFT SIDE -->
+
+        <div class="hero-content">
+
+            <span class="eyebrow">
+                BLOOD DONATION • COMMUNITY • IMPACT
+            </span>
+
+
+            <h1>
+                One donation can become
+                <span>someone's tomorrow.</span>
+            </h1>
+
+
+            <p>
+                LifeLink connects blood donors, patients and
+                blood availability through one simple platform.
+            </p>
+
+
+            <div class="hero-buttons">
+
+                {% if user.is_authenticated %}
+
+                    <a
+                        href="{% url 'donate' %}"
+                        class="btn btn-primary"
+                    >
+                        Donate Blood
+                    </a>
+
+                    <a
+                        href="{% url 'request_blood' %}"
+                        class="btn btn-secondary"
+                    >
+                        Request Blood
+                    </a>
+
+                {% else %}
+
+                    <a
+                        href="{% url 'register' %}"
+                        class="btn btn-primary"
+                    >
+                        Become a Donor
+                    </a>
+
+                    <a
+                        href="{% url 'inventory' %}"
+                        class="btn btn-secondary"
+                    >
+                        Check Blood Stock
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- QUICK STATISTICS -->
+
+            <div class="hero-stats">
+
+                <div class="hero-stat">
+
+                    <strong>
+                        {{ donor_count }}
+                    </strong>
+
+                    <span>
+                        Registered Donors
+                    </span>
+
+                </div>
+
+
+                <div class="hero-stat">
+
+                    <strong>
+                        {{ total_units }}
+                    </strong>
+
+                    <span>
+                        Available Units
+                    </span>
+
+                </div>
+
+
+                <div class="hero-stat">
+
+                    <strong>
+                        8
+                    </strong>
+
+                    <span>
+                        Blood Groups
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+
+        <div class="hero-visual">
+
+            <div class="blood-drop">
+
+                <span>
+                    +
+                </span>
+
+            </div>
+
+
+            <div class="floating-info">
+
+                <strong>
+                    Live Blood Stock
+                </strong>
+
+                <span>
+                    Check availability instantly
+                </span>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     BLOOD AVAILABILITY
+===================================================== -->
+
+<section class="section-section">
+
+    <div class="section-heading">
+
+        <div>
+
+            <span class="eyebrow">
+                LIVE INVENTORY
+            </span>
+
+            <h2>
+                Blood availability
+            </h2>
+
+            <p>
+                Quickly check the current availability
+                of different blood groups.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'inventory' %}"
+            class="text-link"
+        >
+            View full inventory →
+        </a>
+
+    </div>
+
+
+    <div class="blood-grid">
+
+
+        {% for group in blood_groups %}
+
+            <div class="blood-card">
+
+
+                <div class="blood-group-icon">
+
+                    {{ group }}
+
+                </div>
+
+
+                {% with item=inventory_map|get_item:group %}
+
+                    <div class="blood-card-info">
+
+                        {% if item %}
+
+                            <strong>
+                                {{ item.units_available }}
+                            </strong>
+
+                            <span>
+                                Units available
+                            </span>
+
+
+                            {% if item.status == "Available" %}
+
+                                <small class="stock-available">
+                                    ● Available
+                                </small>
+
+                            {% elif item.status == "Low" %}
+
+                                <small class="stock-low">
+                                    ● Low Stock
+                                </small>
+
+                            {% else %}
+
+                                <small class="stock-critical">
+                                    ● Critical
+                                </small>
+
+                            {% endif %}
+
+
+                        {% else %}
+
+                            <strong>
+                                0
+                            </strong>
+
+                            <span>
+                                Units available
+                            </span>
+
+                            <small class="stock-critical">
+                                ● Not Available
+                            </small>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endwith %}
+
+
+            </div>
+
+        {% endfor %}
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     HOW LIFELINK WORKS
+===================================================== -->
+
+<section class="section-section workflow-section">
+
+
+    <div class="section-heading centered">
+
+        <span class="eyebrow">
+            SIMPLE WORKFLOW
+        </span>
+
+        <h2>
+            How LifeLink works
+        </h2>
+
+        <p>
+            A simple digital workflow for donors,
+            patients and blood-bank management.
+        </p>
+
+    </div>
+
+
+    <div class="workflow-grid">
+
+
+        <!-- STEP 1 -->
+
+        <div class="workflow-card">
+
+            <div class="workflow-number">
+                01
+            </div>
+
+            <h3>
+                Create your profile
+            </h3>
+
+            <p>
+                Register your account and add your
+                blood group, contact information and
+                donor details.
+            </p>
+
+        </div>
+
+
+        <!-- STEP 2 -->
+
+        <div class="workflow-card">
+
+            <div class="workflow-number">
+                02
+            </div>
+
+            <h3>
+                Donate or request
+            </h3>
+
+            <p>
+                Record a blood donation or submit a
+                blood request with hospital and
+                patient information.
+            </p>
+
+        </div>
+
+
+        <!-- STEP 3 -->
+
+        <div class="workflow-card">
+
+            <div class="workflow-number">
+                03
+            </div>
+
+            <h3>
+                Track everything
+            </h3>
+
+            <p>
+                Use your dashboard to monitor donation
+                history and blood-request status.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FEATURES
+===================================================== -->
+
+<section class="section-section features-section">
+
+
+    <div class="section-heading centered">
+
+        <span class="eyebrow">
+            PLATFORM FEATURES
+        </span>
+
+        <h2>
+            Built for a modern blood-bank workflow
+        </h2>
+
+    </div>
+
+
+    <div class="features-grid">
+
+
+        <div class="feature-box">
+
+            <div class="feature-icon">
+                +
+            </div>
+
+            <h3>
+                Smart Inventory
+            </h3>
+
+            <p>
+                Blood inventory automatically increases
+                when completed donations are recorded.
+            </p>
+
+        </div>
+
+
+        <div class="feature-box">
+
+            <div class="feature-icon">
+                ✓
+            </div>
+
+            <h3>
+                Donor Eligibility
+            </h3>
+
+            <p>
+                Donation history helps track the
+                recommended gap between donations.
+            </p>
+
+        </div>
+
+
+        <div class="feature-box">
+
+            <div class="feature-icon">
+                !
+            </div>
+
+            <h3>
+                Priority Requests
+            </h3>
+
+            <p>
+                Blood requests can be marked Normal,
+                Urgent or Emergency.
+            </p>
+
+        </div>
+
+
+        <div class="feature-box">
+
+            <div class="feature-icon">
+                ↗
+            </div>
+
+            <h3>
+                Request Tracking
+            </h3>
+
+            <p>
+                Users can review their requests and
+                monitor their current status.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     CALL TO ACTION
+===================================================== -->
+
+<section class="cta-section">
+
+
+    <div class="cta-content">
+
+        <span class="eyebrow">
+            MAKE AN IMPACT
+        </span>
+
+        <h2>
+            Your blood could be
+            someone's second chance.
+        </h2>
+
+        <p>
+            Join LifeLink and become part of a
+            community that helps connect people
+            with the blood they need.
+        </p>
+
+    </div>
+
+
+    {% if user.is_authenticated %}
+
+        <a
+            href="{% url 'donate' %}"
+            class="btn btn-light"
+        >
+            Donate Blood
+        </a>
+
+    {% else %}
+
+        <a
+            href="{% url 'register' %}"
+            class="btn btn-light"
+        >
+            Join LifeLink
+        </a>
+
+    {% endif %}
+
+
+</section>
+
+
+{% endblock %}

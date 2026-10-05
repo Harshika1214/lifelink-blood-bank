@@ -1,0 +1,702 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard | LifeLink
+{% endblock %}
+
+
+{% block content %}
+
+<section class="dashboard-page">
+
+
+    <!-- =================================================
+         DASHBOARD HEADER
+    ================================================== -->
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <span class="eyebrow">
+                MY LIFELINK
+            </span>
+
+            <h1>
+                Welcome, {{ user.username }}
+            </h1>
+
+            <p>
+                Manage your donor activity and blood
+                requests from one place.
+            </p>
+
+        </div>
+
+
+        <div class="dashboard-actions">
+
+            <a
+                href="{% url 'donate' %}"
+                class="btn btn-primary"
+            >
+                Donate Blood
+            </a>
+
+            <a
+                href="{% url 'request_blood' %}"
+                class="btn btn-secondary"
+            >
+                Request Blood
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         PROFILE STATUS
+    ================================================== -->
+
+    {% if not profile %}
+
+        <div class="profile-alert">
+
+            <div>
+
+                <strong>
+                    Complete your donor profile
+                </strong>
+
+                <p>
+                    Add your blood group, age, contact
+                    information and donor details before
+                    recording a donation.
+                </p>
+
+            </div>
+
+
+            <a
+                href="{% url 'profile' %}"
+                class="btn btn-primary"
+            >
+                Complete Profile
+            </a>
+
+        </div>
+
+    {% endif %}
+
+
+
+    <!-- =================================================
+         STATISTICS
+    ================================================== -->
+
+    <div class="dashboard-stats">
+
+
+        <!-- DONATIONS -->
+
+        <div class="dashboard-stat-card">
+
+            <div class="stat-icon">
+                +
+            </div>
+
+            <div>
+
+                <span>
+                    Donation Records
+                </span>
+
+                <strong>
+                    {{ donation_count }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- REQUESTS -->
+
+        <div class="dashboard-stat-card">
+
+            <div class="stat-icon">
+                !
+            </div>
+
+            <div>
+
+                <span>
+                    Blood Requests
+                </span>
+
+                <strong>
+                    {{ request_count }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- DONOR STATUS -->
+
+        <div class="dashboard-stat-card">
+
+            <div class="stat-icon">
+                ✓
+            </div>
+
+            <div>
+
+                <span>
+                    Donor Status
+                </span>
+
+                <strong>
+
+                    {% if profile and profile.is_donor %}
+
+                        Active
+
+                    {% else %}
+
+                        Not Set
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- ELIGIBILITY -->
+
+        <div class="dashboard-stat-card">
+
+            <div class="stat-icon">
+                ♥
+            </div>
+
+            <div>
+
+                <span>
+                    Donation Eligibility
+                </span>
+
+                <strong>
+
+                    {% if profile %}
+
+                        {% if profile.eligible_to_donate %}
+
+                            Eligible
+
+                        {% else %}
+
+                            Waiting
+
+                        {% endif %}
+
+                    {% else %}
+
+                        Setup Needed
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =================================================
+         PROFILE SUMMARY
+    ================================================== -->
+
+    {% if profile %}
+
+    <div class="profile-summary">
+
+        <div class="profile-summary-main">
+
+            <div class="profile-avatar">
+
+                {{ profile.full_name|first|upper }}
+
+            </div>
+
+
+            <div>
+
+                <span class="eyebrow">
+                    DONOR PROFILE
+                </span>
+
+                <h2>
+                    {{ profile.full_name }}
+                </h2>
+
+                <p>
+                    {{ profile.city|default:"City not added" }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-details">
+
+            <div>
+
+                <span>
+                    Blood Group
+                </span>
+
+                <strong>
+                    {{ profile.blood_group }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Age
+                </span>
+
+                <strong>
+                    {{ profile.age }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Phone
+                </span>
+
+                <strong>
+                    {{ profile.phone }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Last Donation
+                </span>
+
+                <strong>
+
+                    {% if profile.last_donation_date %}
+
+                        {{ profile.last_donation_date }}
+
+                    {% else %}
+
+                        No donation yet
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <a
+            href="{% url 'profile' %}"
+            class="profile-edit-link"
+        >
+            Edit Profile →
+        </a>
+
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- =================================================
+         RECENT ACTIVITY
+    ================================================== -->
+
+    <div class="dashboard-columns">
+
+
+        <!-- =================================================
+             RECENT DONATIONS
+        ================================================== -->
+
+        <section class="dashboard-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        DONATION HISTORY
+                    </span>
+
+                    <h2>
+                        Recent donations
+                    </h2>
+
+                </div>
+
+
+                <a
+                    href="{% url 'donate' %}"
+                    class="panel-link"
+                >
+                    Donate →
+                </a>
+
+            </div>
+
+
+            {% if donations %}
+
+                <div class="activity-list">
+
+                    {% for donation in donations %}
+
+                        <div class="activity-item">
+
+                            <div class="activity-icon">
+                                +
+                            </div>
+
+
+                            <div class="activity-info">
+
+                                <strong>
+                                    {{ donation.blood_group }}
+                                </strong>
+
+                                <span>
+                                    {{ donation.donation_date }}
+                                </span>
+
+                            </div>
+
+
+                            <div class="activity-value">
+
+                                <strong>
+                                    {{ donation.units }}
+                                </strong>
+
+                                <span>
+                                    unit{{ donation.units|pluralize }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        +
+                    </div>
+
+                    <h3>
+                        No donations yet
+                    </h3>
+
+                    <p>
+                        Your completed donations will
+                        appear here.
+                    </p>
+
+                    {% if profile %}
+
+                        <a
+                            href="{% url 'donate' %}"
+                            class="btn btn-primary"
+                        >
+                            Record Donation
+                        </a>
+
+                    {% else %}
+
+                        <a
+                            href="{% url 'profile' %}"
+                            class="btn btn-primary"
+                        >
+                            Complete Profile
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+
+        <!-- =================================================
+             RECENT REQUESTS
+        ================================================== -->
+
+        <section class="dashboard-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        REQUEST HISTORY
+                    </span>
+
+                    <h2>
+                        Recent requests
+                    </h2>
+
+                </div>
+
+
+                <a
+                    href="{% url 'my_requests' %}"
+                    class="panel-link"
+                >
+                    View all →
+                </a>
+
+            </div>
+
+
+            {% if requests %}
+
+                <div class="activity-list">
+
+                    {% for blood_request in requests %}
+
+                        <div class="activity-item">
+
+
+                            <div class="activity-icon request-icon">
+                                !
+                            </div>
+
+
+                            <div class="activity-info">
+
+                                <strong>
+                                    {{ blood_request.blood_group }}
+                                </strong>
+
+                                <span>
+                                    {{ blood_request.patient_name }}
+                                </span>
+
+                            </div>
+
+
+                            <div class="request-status">
+
+                                <span
+                                    class="status-badge
+                                    status-{{ blood_request.status|lower }}"
+                                >
+
+                                    {{ blood_request.status }}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        !
+                    </div>
+
+                    <h3>
+                        No requests yet
+                    </h3>
+
+                    <p>
+                        Your blood requests will appear
+                        here after submission.
+                    </p>
+
+                    <a
+                        href="{% url 'request_blood' %}"
+                        class="btn btn-primary"
+                    >
+                        Request Blood
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+    </div>
+
+
+
+    <!-- =================================================
+         QUICK ACTIONS
+    ================================================== -->
+
+    <section class="quick-actions-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="eyebrow">
+                    QUICK ACTIONS
+                </span>
+
+                <h2>
+                    What would you like to do?
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="quick-actions-grid">
+
+
+            <a
+                href="{% url 'profile' %}"
+                class="quick-action-card"
+            >
+
+                <span class="quick-action-icon">
+                    👤
+                </span>
+
+                <div>
+
+                    <h3>
+                        My Profile
+                    </h3>
+
+                    <p>
+                        Update your personal and
+                        donor information.
+                    </p>
+
+                </div>
+
+                <span class="quick-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+
+            <a
+                href="{% url 'inventory' %}"
+                class="quick-action-card"
+            >
+
+                <span class="quick-action-icon">
+                    +
+                </span>
+
+                <div>
+
+                    <h3>
+                        Blood Stock
+                    </h3>
+
+                    <p>
+                        Check available blood groups
+                        and current units.
+                    </p>
+
+                </div>
+
+                <span class="quick-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+
+            <a
+                href="{% url 'change_password' %}"
+                class="quick-action-card"
+            >
+
+                <span class="quick-action-icon">
+                    🔒
+                </span>
+
+                <div>
+
+                    <h3>
+                        Account Security
+                    </h3>
+
+                    <p>
+                        Change your password and
+                        keep your account secure.
+                    </p>
+
+                </div>
+
+                <span class="quick-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+</section>
+
+{% endblock %}

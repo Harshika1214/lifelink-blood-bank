@@ -1,0 +1,380 @@
+{% extends "base.html" %}
+
+{% block title %}
+My Blood Requests | LifeLink
+{% endblock %}
+
+{% block content %}
+
+<section class="requests-page">
+    <div class="page-container">
+
+        <!-- PAGE HEADER -->
+        <div class="page-header">
+
+            <div>
+                <span class="eyebrow">
+                    REQUEST MANAGEMENT
+                </span>
+
+                <h1>
+                    My blood requests
+                </h1>
+
+                <p>
+                    View and track all the blood requests
+                    submitted from your account.
+                </p>
+            </div>
+
+            <a
+                href="{% url 'request_blood' %}"
+                class="btn btn-primary"
+            >
+                + New Blood Request
+            </a>
+
+        </div>
+
+
+        {% if requests %}
+
+        <!-- SUMMARY -->
+        <div class="requests-summary">
+
+            <div class="request-summary-card">
+                <span>
+                    Total Requests
+                </span>
+
+                <strong>
+                    {{ requests|length }}
+                </strong>
+            </div>
+
+            <div class="request-summary-card">
+                <span>
+                    Active Requests
+                </span>
+
+                <strong>
+                    {{ requests|length }}
+                </strong>
+            </div>
+
+            <div class="request-summary-card">
+                <span>
+                    Blood Groups
+                </span>
+
+                <strong>
+                    8
+                </strong>
+            </div>
+
+        </div>
+
+
+        <!-- REQUEST LIST -->
+        <div class="requests-list">
+
+            {% for blood_request in requests %}
+
+            <article class="request-card">
+
+                <!-- CARD HEADER -->
+                <div class="request-card-header">
+
+                    <div class="request-patient">
+
+                        <div class="request-blood-icon">
+                            {{ blood_request.blood_group }}
+                        </div>
+
+                        <div>
+
+                            <span class="eyebrow">
+                                PATIENT
+                            </span>
+
+                            <h2>
+                                {{ blood_request.patient_name }}
+                            </h2>
+
+                            <p>
+                                Request #{{ blood_request.id }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="request-card-status">
+
+                        {% if blood_request.status == "Pending" %}
+
+                            <span class="status-badge status-pending">
+                                Pending
+                            </span>
+
+                        {% elif blood_request.status == "Approved" %}
+
+                            <span class="status-badge status-approved">
+                                Approved
+                            </span>
+
+                        {% elif blood_request.status == "Fulfilled" %}
+
+                            <span class="status-badge status-fulfilled">
+                                Fulfilled
+                            </span>
+
+                        {% elif blood_request.status == "Rejected" %}
+
+                            <span class="status-badge status-rejected">
+                                Rejected
+                            </span>
+
+                        {% endif %}
+
+
+                        {% if blood_request.priority == "Emergency" %}
+
+                            <span class="priority-badge priority-emergency">
+                                Emergency
+                            </span>
+
+                        {% elif blood_request.priority == "Urgent" %}
+
+                            <span class="priority-badge priority-urgent">
+                                Urgent
+                            </span>
+
+                        {% else %}
+
+                            <span class="priority-badge priority-normal">
+                                Normal
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- REQUEST DETAILS -->
+                <div class="request-card-details">
+
+                    <div class="request-detail">
+
+                        <span>
+                            Blood Group
+                        </span>
+
+                        <strong>
+                            {{ blood_request.blood_group }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="request-detail">
+
+                        <span>
+                            Units Required
+                        </span>
+
+                        <strong>
+                            {{ blood_request.units_required }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="request-detail">
+
+                        <span>
+                            Hospital
+                        </span>
+
+                        <strong>
+                            {{ blood_request.hospital_name }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="request-detail">
+
+                        <span>
+                            Hospital City
+                        </span>
+
+                        <strong>
+                            {{ blood_request.hospital_city }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="request-detail">
+
+                        <span>
+                            Required Date
+                        </span>
+
+                        <strong>
+                            {{ blood_request.required_date|date:"d M Y" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="request-detail">
+
+                        <span>
+                            Submitted
+                        </span>
+
+                        <strong>
+                            {{ blood_request.created_at|date:"d M Y" }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- REASON -->
+                {% if blood_request.reason %}
+
+                <div class="request-reason">
+
+                    <span>
+                        Additional Information
+                    </span>
+
+                    <p>
+                        {{ blood_request.reason }}
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+
+                <!-- FOOTER -->
+                <div class="request-card-footer">
+
+                    <div class="request-contact">
+
+                        <span>
+                            Contact
+                        </span>
+
+                        <strong>
+                            {{ blood_request.contact_phone }}
+                        </strong>
+
+                    </div>
+
+
+                    {% if blood_request.status == "Pending" %}
+
+                    <form
+                        method="post"
+                        action="{% url 'cancel_request' blood_request.id %}"
+                        class="cancel-request-form"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="btn btn-danger-outline"
+                            onclick="return confirm('Are you sure you want to cancel this blood request?');"
+                        >
+                            Cancel Request
+                        </button>
+
+                    </form>
+
+
+                    {% elif blood_request.status == "Approved" %}
+
+                    <div class="request-status-message approved-message">
+
+                        ✓ Your request has been approved.
+
+                    </div>
+
+
+                    {% elif blood_request.status == "Fulfilled" %}
+
+                    <div class="request-status-message fulfilled-message">
+
+                        ✓ This blood request has been fulfilled.
+
+                    </div>
+
+
+                    {% elif blood_request.status == "Rejected" %}
+
+                    <div class="request-status-message rejected-message">
+
+                        This request is no longer active.
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+
+        {% else %}
+
+
+        <!-- EMPTY STATE -->
+        <div class="empty-state large-empty-state">
+
+            <div class="empty-icon">
+                !
+            </div>
+
+            <span class="eyebrow">
+                NO REQUESTS FOUND
+            </span>
+
+            <h2>
+                No blood requests yet
+            </h2>
+
+            <p>
+                You haven't submitted any blood requests.
+                When you need blood for a patient, you can
+                create a request and track its status here.
+            </p>
+
+            <a
+                href="{% url 'request_blood' %}"
+                class="btn btn-primary"
+            >
+                Create Blood Request
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,383 @@
+{% extends "base.html" %}
+
+{% block title %}
+Blood Stock | LifeLink
+{% endblock %}
+
+{% block content %}
+
+<section class="inventory-page">
+    <div class="page-container">
+
+        <!-- PAGE HEADER -->
+        <div class="page-header">
+            <div>
+                <span class="eyebrow">
+                    LIVE BLOOD INVENTORY
+                </span>
+
+                <h1>
+                    Blood stock
+                </h1>
+
+                <p>
+                    Check the current availability of
+                    blood groups across the LifeLink system.
+                </p>
+            </div>
+
+            {% if user.is_authenticated %}
+                <a
+                    href="{% url 'request_blood' %}"
+                    class="btn btn-primary"
+                >
+                    Request Blood
+                </a>
+            {% else %}
+                <a
+                    href="{% url 'register' %}"
+                    class="btn btn-primary"
+                >
+                    Join LifeLink
+                </a>
+            {% endif %}
+        </div>
+
+
+        <!-- INVENTORY SUMMARY -->
+        <div class="inventory-summary">
+
+            <div class="inventory-summary-card">
+                <div class="inventory-summary-icon">
+                    +
+                </div>
+
+                <div>
+                    <span>
+                        Total Available Units
+                    </span>
+
+                    <strong>
+                        {{ total_units }}
+                    </strong>
+                </div>
+            </div>
+
+
+            <div class="inventory-summary-card">
+                <div class="inventory-summary-icon">
+                    ✓
+                </div>
+
+                <div>
+                    <span>
+                        Blood Groups
+                    </span>
+
+                    <strong>
+                        8
+                    </strong>
+                </div>
+            </div>
+
+
+            <div class="inventory-summary-card">
+                <div class="inventory-summary-icon">
+                    !
+                </div>
+
+                <div>
+                    <span>
+                        Inventory Status
+                    </span>
+
+                    <strong>
+                        Live
+                    </strong>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- SEARCH -->
+        <div class="inventory-toolbar">
+
+            <div>
+                <span class="eyebrow">
+                    SEARCH INVENTORY
+                </span>
+
+                <h2>
+                    Find a blood group
+                </h2>
+            </div>
+
+
+            <form
+                method="get"
+                class="inventory-search"
+            >
+
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ query }}"
+                    placeholder="Search blood group e.g. A+"
+                    maxlength="3"
+                >
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Search
+                </button>
+
+                {% if query %}
+                    <a
+                        href="{% url 'inventory' %}"
+                        class="btn btn-secondary"
+                    >
+                        Clear
+                    </a>
+                {% endif %}
+
+            </form>
+
+        </div>
+
+
+        <!-- INVENTORY TABLE -->
+        {% if inventory %}
+
+        <div class="inventory-table-card">
+
+            <div class="table-wrapper">
+
+                <table class="inventory-table">
+
+                    <thead>
+                        <tr>
+                            <th>
+                                Blood Group
+                            </th>
+
+                            <th>
+                                Available Units
+                            </th>
+
+                            <th>
+                                Minimum Level
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Last Updated
+                            </th>
+                        </tr>
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for item in inventory %}
+
+                        <tr>
+
+                            <td>
+                                <div class="table-blood-group">
+                                    <span class="table-blood-icon">
+                                        {{ item.blood_group }}
+                                    </span>
+
+                                    <strong>
+                                        {{ item.blood_group }}
+                                    </strong>
+                                </div>
+                            </td>
+
+
+                            <td>
+                                <strong class="unit-count">
+                                    {{ item.units_available }}
+                                </strong>
+
+                                <span class="unit-label">
+                                    unit{{ item.units_available|pluralize }}
+                                </span>
+                            </td>
+
+
+                            <td>
+                                {{ item.minimum_level }}
+                            </td>
+
+
+                            <td>
+
+                                {% if item.status == "Available" %}
+
+                                    <span class="inventory-status status-available">
+                                        <span class="status-dot"></span>
+                                        Available
+                                    </span>
+
+                                {% elif item.status == "Low" %}
+
+                                    <span class="inventory-status status-low">
+                                        <span class="status-dot"></span>
+                                        Low Stock
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="inventory-status status-critical">
+                                        <span class="status-dot"></span>
+                                        Critical
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+                                {{ item.updated_at|date:"d M Y, h:i A" }}
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        {% else %}
+
+        <!-- NO RESULTS -->
+        <div class="empty-state large-empty-state">
+
+            <div class="empty-icon">
+                +
+            </div>
+
+            <span class="eyebrow">
+                NO RESULTS
+            </span>
+
+            <h2>
+                No blood group found
+            </h2>
+
+            <p>
+                We couldn't find any inventory matching
+                "<strong>{{ query }}</strong>".
+                Try another blood group.
+            </p>
+
+            <a
+                href="{% url 'inventory' %}"
+                class="btn btn-primary"
+            >
+                View All Blood Groups
+            </a>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- INFORMATION SECTION -->
+        <section class="inventory-info-section">
+
+            <div class="inventory-info-content">
+
+                <span class="eyebrow">
+                    UNDERSTANDING STOCK LEVELS
+                </span>
+
+                <h2>
+                    What do the inventory statuses mean?
+                </h2>
+
+                <p>
+                    LifeLink uses the minimum stock level configured
+                    for each blood group to indicate whether the
+                    available supply requires attention.
+                </p>
+
+            </div>
+
+
+            <div class="inventory-status-guide">
+
+                <div class="status-guide-item">
+
+                    <span class="guide-dot guide-available"></span>
+
+                    <div>
+                        <strong>
+                            Available
+                        </strong>
+
+                        <p>
+                            Stock is above the configured
+                            minimum level.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="status-guide-item">
+
+                    <span class="guide-dot guide-low"></span>
+
+                    <div>
+                        <strong>
+                            Low Stock
+                        </strong>
+
+                        <p>
+                            Units have reached or fallen
+                            below the minimum level.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="status-guide-item">
+
+                    <span class="guide-dot guide-critical"></span>
+
+                    <div>
+                        <strong>
+                            Critical
+                        </strong>
+
+                        <p>
+                            No units are currently available.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+</section>
+
+{% endblock %}

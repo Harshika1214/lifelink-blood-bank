@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+
+{% block title %}
+Login | LifeLink
+{% endblock %}
+
+
+{% block content %}
+
+<section class="auth-page">
+
+    <div class="auth-container">
+
+
+        <!-- LEFT INFORMATION -->
+
+        <div class="auth-intro">
+
+            <span class="eyebrow">
+                WELCOME BACK
+            </span>
+
+            <h1>
+                Continue making
+                <span>an impact.</span>
+            </h1>
+
+            <p>
+                Sign in to manage your donor profile,
+                record donations, check blood stock
+                and track blood requests.
+            </p>
+
+
+            <div class="auth-points">
+
+                <div class="auth-point">
+
+                    <span class="point-icon">
+                        ✓
+                    </span>
+
+                    <div>
+                        <strong>
+                            Manage your donor profile
+                        </strong>
+
+                        <p>
+                            Keep your blood and contact
+                            information updated.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="auth-point">
+
+                    <span class="point-icon">
+                        ✓
+                    </span>
+
+                    <div>
+                        <strong>
+                            Track your activity
+                        </strong>
+
+                        <p>
+                            View donations and blood
+                            requests from your dashboard.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="auth-point">
+
+                    <span class="point-icon">
+                        ✓
+                    </span>
+
+                    <div>
+                        <strong>
+                            Help save lives
+                        </strong>
+
+                        <p>
+                            Donate blood and help connect
+                            patients with available stock.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- LOGIN FORM -->
+
+        <div class="form-card auth-card">
+
+            <span class="eyebrow">
+                ACCOUNT LOGIN
+            </span>
+
+            <h2>
+                Sign in
+            </h2>
+
+            <p class="form-description">
+                Enter your account details to continue.
+            </p>
+
+
+            {% if form.errors %}
+
+                <div class="form-error">
+
+                    <strong>
+                        Login failed
+                    </strong>
+
+                    <p>
+                        Please check your username
+                        and password and try again.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+
+            <form method="post">
+
+                {% csrf_token %}
+
+
+                <!-- USERNAME -->
+
+                <div class="form-group">
+
+                    <label for="id_username">
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        name="username"
+                        id="id_username"
+                        placeholder="Enter your username"
+                        autocomplete="username"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="id_password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        name="password"
+                        id="id_password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- SUBMIT -->
+
+                <button
+                    type="submit"
+                    class="btn btn-primary btn-full"
+                >
+                    Sign In
+                </button>
+
+
+            </form>
+
+
+            <!-- LINKS -->
+
+            <div class="form-links">
+
+                <a
+                    href="{% url 'password_reset' %}"
+                >
+                    Forgot password?
+                </a>
+
+            </div>
+
+
+            <div class="auth-bottom">
+
+                <span>
+                    Don't have an account?
+                </span>
+
+                <a href="{% url 'register' %}">
+                    Create one
+                </a>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+{% endblock %}

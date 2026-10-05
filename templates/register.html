@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+
+{% block title %}
+Create Account | LifeLink
+{% endblock %}
+
+
+{% block content %}
+
+<section class="auth-page">
+
+    <div class="auth-container">
+
+
+        <!-- LEFT INFORMATION -->
+
+        <div class="auth-intro">
+
+            <span class="eyebrow">
+                JOIN LIFELINK
+            </span>
+
+            <h1>
+                Become part of a
+                <span>life-saving community.</span>
+            </h1>
+
+            <p>
+                Create your free account and manage
+                your donor profile, blood donations
+                and blood requests from one place.
+            </p>
+
+
+            <div class="auth-points">
+
+                <div class="auth-point">
+
+                    <span class="point-icon">
+                        +
+                    </span>
+
+                    <div>
+                        <strong>
+                            Create your donor profile
+                        </strong>
+
+                        <p>
+                            Add your blood group and
+                            contact information.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="auth-point">
+
+                    <span class="point-icon">
+                        +
+                    </span>
+
+                    <div>
+                        <strong>
+                            Record blood donations
+                        </strong>
+
+                        <p>
+                            Keep track of your donation
+                            history in one place.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="auth-point">
+
+                    <span class="point-icon">
+                        +
+                    </span>
+
+                    <div>
+                        <strong>
+                            Request blood when needed
+                        </strong>
+
+                        <p>
+                            Submit requests with hospital
+                            and priority information.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- REGISTRATION FORM -->
+
+        <div class="form-card auth-card">
+
+            <span class="eyebrow">
+                GET STARTED
+            </span>
+
+            <h2>
+                Create your account
+            </h2>
+
+            <p class="form-description">
+                Enter your details to create your
+                LifeLink account.
+            </p>
+
+
+            <form method="post">
+
+                {% csrf_token %}
+
+
+                <!-- USERNAME -->
+
+                <div class="form-group">
+
+                    <label for="id_username">
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        name="username"
+                        id="id_username"
+                        placeholder="Choose a username"
+                        autocomplete="username"
+                        required
+                    >
+
+                    {% if form.username.errors %}
+
+                        <div class="field-error">
+
+                            {{ form.username.errors|striptags }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="id_email">
+                        Email address
+                    </label>
+
+                    <input
+                        type="email"
+                        name="email"
+                        id="id_email"
+                        placeholder="Enter your email"
+                        autocomplete="email"
+                        required
+                    >
+
+                    {% if form.email.errors %}
+
+                        <div class="field-error">
+
+                            {{ form.email.errors|striptags }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="id_password1">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        name="password1"
+                        id="id_password1"
+                        placeholder="Create a strong password"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    {% if form.password1.errors %}
+
+                        <div class="field-error">
+
+                            {{ form.password1.errors|striptags }}
+
+                        </div>
+
+                    {% endif %}
+
+                    <small class="field-help">
+                        Use at least 8 characters and
+                        avoid common passwords.
+                    </small>
+
+                </div>
+
+
+                <!-- CONFIRM PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="id_password2">
+                        Confirm password
+                    </label>
+
+                    <input
+                        type="password"
+                        name="password2"
+                        id="id_password2"
+                        placeholder="Enter password again"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    {% if form.password2.errors %}
+
+                        <div class="field-error">
+
+                            {{ form.password2.errors|striptags }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- NON-FIELD ERRORS -->
+
+                {% if form.non_field_errors %}
+
+                    <div class="form-error">
+
+                        {{ form.non_field_errors|striptags }}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- SUBMIT -->
+
+                <button
+                    type="submit"
+                    class="btn btn-primary btn-full"
+                >
+                    Create Account
+                </button>
+
+
+            </form>
+
+
+            <div class="auth-bottom">
+
+                <span>
+                    Already have an account?
+                </span>
+
+                <a href="{% url 'login' %}">
+                    Sign in
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

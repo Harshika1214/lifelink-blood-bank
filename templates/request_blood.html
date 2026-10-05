@@ -1,0 +1,344 @@
+{% extends "base.html" %}
+
+{% block title %}
+Request Blood | LifeLink
+{% endblock %}
+
+{% block content %}
+<section class="form-page">
+    <div class="page-container">
+
+        <div class="page-header">
+            <div>
+                <span class="eyebrow">BLOOD REQUEST</span>
+                <h1>Request blood</h1>
+                <p>
+                    Submit the patient and hospital details
+                    needed for a blood request.
+                </p>
+            </div>
+
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                ← Back to Dashboard
+            </a>
+        </div>
+
+        <div class="request-layout">
+
+            <div class="form-card request-form-card">
+
+                <div class="form-card-header">
+                    <div class="form-icon request-form-icon">!</div>
+
+                    <div>
+                        <span class="eyebrow">REQUEST DETAILS</span>
+                        <h2>Patient information</h2>
+                    </div>
+                </div>
+
+                <p class="form-description">
+                    Provide accurate information so the blood
+                    request can be reviewed and processed.
+                </p>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="form-error">
+                            {{ form.non_field_errors|striptags }}
+                        </div>
+                    {% endif %}
+
+                    <div class="form-section-title">
+                        <span>01</span>
+                        <h3>Patient details</h3>
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="{{ form.patient_name.id_for_label }}">
+                                Patient Name
+                            </label>
+
+                            {{ form.patient_name }}
+
+                            {% if form.patient_name.errors %}
+                                <div class="field-error">
+                                    {{ form.patient_name.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.blood_group.id_for_label }}">
+                                Blood Group Required
+                            </label>
+
+                            {{ form.blood_group }}
+
+                            {% if form.blood_group.errors %}
+                                <div class="field-error">
+                                    {{ form.blood_group.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.units_required.id_for_label }}">
+                                Units Required
+                            </label>
+
+                            {{ form.units_required }}
+
+                            <small class="field-help">
+                                You can request between 1 and 20 units.
+                            </small>
+
+                            {% if form.units_required.errors %}
+                                <div class="field-error">
+                                    {{ form.units_required.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.required_date.id_for_label }}">
+                                Required Date
+                            </label>
+
+                            {{ form.required_date }}
+
+                            {% if form.required_date.errors %}
+                                <div class="field-error">
+                                    {{ form.required_date.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                    <div class="form-section-title">
+                        <span>02</span>
+                        <h3>Hospital details</h3>
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="{{ form.hospital_name.id_for_label }}">
+                                Hospital Name
+                            </label>
+
+                            {{ form.hospital_name }}
+
+                            {% if form.hospital_name.errors %}
+                                <div class="field-error">
+                                    {{ form.hospital_name.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.hospital_city.id_for_label }}">
+                                Hospital City
+                            </label>
+
+                            {{ form.hospital_city }}
+
+                            {% if form.hospital_city.errors %}
+                                <div class="field-error">
+                                    {{ form.hospital_city.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                    <div class="form-section-title">
+                        <span>03</span>
+                        <h3>Priority & contact</h3>
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="{{ form.priority.id_for_label }}">
+                                Priority
+                            </label>
+
+                            {{ form.priority }}
+
+                            <small class="field-help">
+                                Select Emergency only when the
+                                situation is genuinely urgent.
+                            </small>
+
+                            {% if form.priority.errors %}
+                                <div class="field-error">
+                                    {{ form.priority.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.contact_phone.id_for_label }}">
+                                Contact Phone
+                            </label>
+
+                            {{ form.contact_phone }}
+
+                            {% if form.contact_phone.errors %}
+                                <div class="field-error">
+                                    {{ form.contact_phone.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group full-field">
+                            <label for="{{ form.reason.id_for_label }}">
+                                Reason / Additional Information
+                            </label>
+
+                            {{ form.reason }}
+
+                            <small class="field-help">
+                                Optional. Add relevant information
+                                about the patient's requirement.
+                            </small>
+
+                            {% if form.reason.errors %}
+                                <div class="field-error">
+                                    {{ form.reason.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                    <div class="request-warning">
+                        <div class="warning-icon">!</div>
+
+                        <div>
+                            <strong>
+                                Please verify your information
+                            </strong>
+
+                            <p>
+                                Make sure the patient's name,
+                                blood group, required units,
+                                hospital and contact number
+                                are correct before submitting.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Submit Blood Request
+                        </button>
+
+                        <a
+                            href="{% url 'dashboard' %}"
+                            class="btn btn-secondary"
+                        >
+                            Cancel
+                        </a>
+                    </div>
+
+                </form>
+            </div>
+
+            <aside class="request-info-card">
+
+                <div class="request-info-header">
+                    <div class="request-large-icon">
+                        +
+                    </div>
+
+                    <span class="eyebrow">
+                        BEFORE YOU SUBMIT
+                    </span>
+
+                    <h2>How it works</h2>
+                </div>
+
+                <div class="request-steps">
+
+                    <div class="request-step">
+                        <div class="request-step-number">
+                            01
+                        </div>
+
+                        <div>
+                            <strong>
+                                Submit your request
+                            </strong>
+
+                            <p>
+                                Enter the patient's blood
+                                requirement and hospital details.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="request-step">
+                        <div class="request-step-number">
+                            02
+                        </div>
+
+                        <div>
+                            <strong>
+                                Request is reviewed
+                            </strong>
+
+                            <p>
+                                The blood-bank team can review
+                                your request through the admin panel.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="request-step">
+                        <div class="request-step-number">
+                            03
+                        </div>
+
+                        <div>
+                            <strong>
+                                Track the status
+                            </strong>
+
+                            <p>
+                                Check your dashboard to see whether
+                                the request is pending, approved,
+                                fulfilled or rejected.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="emergency-box">
+                    <span class="emergency-icon">!</span>
+
+                    <div>
+                        <strong>Emergency request?</strong>
+
+                        <p>
+                            Select <b>Emergency</b> as the priority
+                            when submitting the request.
+                        </p>
+                    </div>
+                </div>
+
+            </aside>
+
+        </div>
+    </div>
+</section>
+{% endblock %}
