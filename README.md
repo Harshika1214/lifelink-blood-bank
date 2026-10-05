@@ -143,29 +143,15 @@ Admin functionality includes:
 
 ## Application Architecture
 
-The application follows Django's Model-View-Template architecture.
+The application follows Django's Model-View-Template (MVT) architecture.
 
-    User / Browser
-          |
-          v
-    URL Routing
-          |
-          v
-        Views
-       /     \
-      v       v
-    Forms    Models
-      |        |
-      |        v
-      |    SQLite Database
-      |        |
-      +------> Views
-                |
-                v
-            Templates
-                |
-                v
-          User Interface
+- **URLs** — Route user requests to the appropriate views.
+- **Views** — Handle application logic and user requests.
+- **Forms** — Validate and process user input.
+- **Models** — Define database structure and relationships.
+- **Database** — SQLite stores application data through Django ORM.
+- **Templates** — Generate the user-facing HTML pages.
+- **Admin Panel** — Provides administrative management of application data.
 
 ### Application Flow
 
@@ -261,29 +247,11 @@ Important fields include:
 
 ## Database Relationships
 
-    User
-     |
-     | 1 : 1
-     v
-    DonorProfile
-     |
-     | 1 : Many
-     v
-    Donation
-
-
-    User
-     |
-     | 1 : Many
-     v
-    BloodRequest
-
-
-    BloodInventory
-     |
-     | Blood Group
-     v
-    Blood Stock
+- **User → DonorProfile:** One-to-One relationship.
+- **DonorProfile → Donation:** One-to-Many relationship.
+- **User → BloodRequest:** One-to-Many relationship.
+- **BloodInventory:** Maintains available units for each blood group.
+- Django ORM manages these relationships and database operations.
 
 ## Business Logic
 
@@ -360,47 +328,57 @@ Examples include:
 
 ## Project Structure
 
-    Blood_Bank_project/
-    │
-    ├── bloodbank/
-    │   ├── __init__.py
-    │   ├── settings.py
-    │   ├── urls.py
-    │   ├── asgi.py
-    │   └── wsgi.py
-    │
-    ├── core/
-    │   ├── migrations/
-    │   ├── templatetags/
-    │   │   └── blood_extras.py
-    │   ├── admin.py
-    │   ├── apps.py
-    │   ├── forms.py
-    │   ├── models.py
-    │   ├── urls.py
-    │   ├── views.py
-    │   └── tests.py
-    │
-    ├── static/
-    │   └── css/
-    │       └── style.css
-    │
-    ├── templates/
-    │   ├── home.html
-    │   ├── login.html
-    │   ├── register.html
-    │   ├── dashboard.html
-    │   ├── profile.html
-    │   ├── donate.html
-    │   ├── request_blood.html
-    │   ├── my_requests.html
-    │   ├── inventory.html
-    │   ├── change_password.html
-    │   └── registration/
-    │
-    ├── .gitignore
-    ├── manage.py
-    └── README.md
+- `bloodbank/`
+  - `__init__.py`
+  - `settings.py`
+  - `urls.py`
+  - `asgi.py`
+  - `wsgi.py`
+
+- `core/`
+  - `migrations/`
+  - `templatetags/`
+    - `blood_extras.py`
+  - `admin.py`
+  - `apps.py`
+  - `forms.py`
+  - `models.py`
+  - `urls.py`
+  - `views.py`
+  - `tests.py`
+
+- `static/`
+  - `css/`
+    - `style.css`
+
+- `templates/`
+  - `home.html`
+  - `login.html`
+  - `register.html`
+  - `dashboard.html`
+  - `profile.html`
+  - `donate.html`
+  - `request_blood.html`
+  - `my_requests.html`
+  - `inventory.html`
+  - `change_password.html`
+  - `registration/`
+
+- `screenshots/`
+  - `admin.png`
+  - `Blood_requests.png`
+  - `Blood_stock.png`
+  - `Donate Blood.png`
+  - `Donor_profile.png`
+  - `Homepage.png`
+  - `Loginpage.png`
+  - `Registration.png`
+
+- `.env.example`
+- `.gitignore`
+- `manage.py`
+- `README.md`
+- `requirements.txt`
 
 ## Installation & Setup
 
